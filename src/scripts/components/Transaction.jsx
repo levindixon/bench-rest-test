@@ -29,23 +29,23 @@ module.exports = React.createClass({
 
   render: function() {
     return (
-      <tr>
-        <td>
+      <tr className='c-transaction'>
+        <td className='c-transaction__data'>
           <FormattedDate
             day="numeric"
             month="long"
             value={this.state.date}
             year="numeric" />
         </td>
-        <td>{this.state.company}</td>
-        <td>{this.state.ledger}</td>
-        <td>
+        <td className='c-transaction__data'>{this.state.company}</td>
+        <td className='c-transaction__data'>{this.state.ledger}</td>
+        <td className='c-transaction__data'>
           <FormattedNumber
             currency="USD"
             style="currency"
             value={this.state.amount}/>
         </td>
-        <td>
+        <td className='c-transaction__data'>
           <FormattedNumber
             currency="USD"
             style="currency"
