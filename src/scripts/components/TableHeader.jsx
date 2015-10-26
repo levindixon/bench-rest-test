@@ -29,12 +29,12 @@ module.exports = React.createClass({
 
     if (this.props.order === 'desc') {
       return (
-        <span className='c-table-header__arrow'>V</span>
+        <span className='c-table-header__down-arrow'></span>
       );
     }
 
     return (
-      <span className='c-table-header__arrow'>^</span>
+      <span className='c-table-header__up-arrow'></span>
     );
   },
 
