@@ -11,29 +11,48 @@ let Store = Reflux.createStore({
   transactions: [],
   balance: 0,
   pageCount: 0,
+  sortedBy: 'date',
+  order: 'desc',
 
-  onGetTransactions: function() {
+  onGetTransactions: function(sortBy, order) {
+    this.sortedBy = sortBy || 'date';
+    this.order = order || 'desc';
+
     if (this.transactions.length > 0) {
-      this.trigger(this.transactions);
+      this.trigger(
+        this.transactions,
+        this.sortedBy,
+        this.order
+      );
       return;
     }
 
     this.fetchFirstPage();
   },
 
-  onSortTransactions: function(sortBy, direction) {
+  onSortTransactions: function(sortBy, order) {
+    this.sortedBy = sortBy || this.sortedBy;
+    this.order = order || this.order;
+
     this.trigger(
-      this.sort(this.transactions, sortBy, direction)
+      this.sort(this.transactions, sortBy, order),
+      this.sortedBy,
+      this.order
     );
   },
 
   populateTransactions: function(newTransactions) {
     newTransactions = this.cleanTransactionsData(newTransactions);
     this.transactions = this.transactions.concat(newTransactions);
-    this.transactions = this.sort(this.transactions, 'date');
+    this.transactions = this.sort(this.transactions, this.sortedBy, this.order);
     this.balance = this.calculateBalance(this.transactions);
     this.transactions = this.mapBalance(this.transactions, this.balance);
-    this.trigger(this.transactions);
+
+    this.trigger(
+      this.transactions,
+      this.sortedBy,
+      this.order
+    );
   },
 
   cleanTransactionsData: function(transactions) {
@@ -64,8 +83,8 @@ let Store = Reflux.createStore({
 
   mapBalance: function(transactions, balance) {
     return _.map(transactions, function(transaction) {
-      balance = balance - transaction.amount;
       transaction.balance = Math.round(balance * 1e2) / 1e2;
+      balance = balance - transaction.amount;
       return transaction;
     });
   },
@@ -77,12 +96,10 @@ let Store = Reflux.createStore({
     return pageCount;
   },
 
-  sort: function(transactions, sortBy, direction) {
-    if (!direction) {
-      direction = 'desc';
-    }
+  sort: function(transactions, sortBy, order) {
+    order = order || this.order;
 
-    return _.sortByOrder(transactions, sortBy, direction);
+    return _.sortByOrder(transactions, sortBy, order);
   },
 
   fetchFirstPage: function() {
