@@ -1,1 +1,181 @@
+//
+// Fonts
+//
+
+@import url(https://fonts.googleapis.com/css?family=Lato:400,700);
+@import url(https://i.icomoon.io/public/ba35b7dd6a/Bench/style.css);
+
+//
+// Reset
+//
+
+// http://meyerweb.com/eric/tools/css/reset/
+// v2.0 | 20110126
+// License: none (public domain)
+
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol, ul {
+  list-style: none;
+}
+blockquote, q {
+  quotes: none;
+}
+blockquote {
+  &:before, &:after {
+    content: "";
+    content: none;
+  }
+}
+q {
+  &:before, &:after {
+    content: "";
+    content: none;
+  }
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+//
+// App component
+//
+
+.c-app {
+  padding-bottom: 30px;
+  background-color: #EFEDE8;
+  font-family: 'Lato', sans-serif;
+}
+
+.c-app__header {
+  padding: 27px 0;
+
+  background-color: #098B8C;
+
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+}
+
+//
+// Transaction table template
+//
+
+.t-transaction-table {
+  width: 95%;
+  margin: 30px auto 0 auto;
+
+  box-shadow: 0px 0px 5px rgba(0,0,0,0.1);
+}
+
+.t-transaction-table__row {
+  height: 30px;
+}
+
+.t-transaction-table__head {
+  background-color: #fff;
+
+  color: #098B8C;
+  font-weight: 700;
+  text-transform: capitalize;
+  text-align: left;
+}
+
+.t-transaction-table__body {
+  background-color: #F6F6F6;
+  font-size: 14px;
+}
+
+.t-transaction-table__balance {
+  padding: 15px 30px 15px 0;
+  text-align: right;
+}
+
+//
+// TableHeader component
+//
+
+.c-table-header,
+.t-transaction-table__header {
+  padding: 15px 0 15px 30px;
+}
+
+.c-table-header {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.c-table-header__down-arrow,
+.c-table-header__up-arrow {
+  padding-left: 5px;
+
+  font-family: 'icomoon';
+  font-size: 12px;
+}
+
+.c-table-header__down-arrow {
+  &:before {
+    content: "\e900";
+  }
+}
+
+.c-table-header__up-arrow {
+  &:before {
+    content: "\e901";
+  }
+}
+
+//
+// Transaction component
+//
+
+.c-transaction {
+  border-top: 1px solid #E9E9E9;
+  border-bottom: 1px solid #E9E9E9;
+
+  color: #A3A3A3;
+
+  &:hover {
+    color:  #098B8C;
+    .c-transaction__balance,
+    .c-transaction__company {
+      color:  #098B8C;
+    }
+  }
+}
+
+.c-transaction__data {
+  padding: 15px 0 15px 30px;
+}
+
+.c-transaction__balance {
+  padding: 15px 30px 15px 0;
+
+  color: #000;
+  font-weight: 700;
+  text-align: right;
+}
+
+.c-transaction__company {
+  color: #000;
+  font-weight: 700;
+}
+
 
