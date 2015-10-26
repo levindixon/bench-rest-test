@@ -21,9 +21,16 @@ let Store = Reflux.createStore({
     this.fetchFirstPage();
   },
 
+  onSortTransactions: function(sortBy, direction) {
+    this.trigger(
+      this.sort(this.transactions, sortBy, direction)
+    );
+  },
+
   populateTransactions: function(newTransactions) {
     newTransactions = this.cleanTransactionsData(newTransactions);
     this.transactions = this.transactions.concat(newTransactions);
+    this.transactions = this.sort(this.transactions, 'date');
     this.trigger(this.transactions);
   },
 
@@ -54,6 +61,14 @@ let Store = Reflux.createStore({
     this.pageCount = pageCount;
 
     return pageCount;
+  },
+
+  sort: function(transactions, sortBy, direction) {
+    if (!direction) {
+      direction = 'desc';
+    }
+
+    return _.sortByOrder(transactions, sortBy, direction);
   },
 
   fetchFirstPage: function() {

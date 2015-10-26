@@ -3,5 +3,6 @@
 const Reflux = require('reflux');
 
 module.exports = Reflux.createActions([
-  'getTransactions'
+  'getTransactions',
+  'sortTransactions'
 ]);
