@@ -4,6 +4,7 @@ const React = require('react');
 const Reflux = require('reflux');
 // Components
 const Transaction = require('components/Transaction');
+const TableHeader = require('components/TableHeader');
 // Actions
 const transactionActions = require('actions/transaction');
 // Stores
@@ -14,7 +15,9 @@ module.exports = React.createClass({
 
   getInitialState: function() {
     return {
-      transactions: []
+      transactions: [],
+      sortedBy: '',
+      order: ''
     };
   },
 
@@ -23,31 +26,46 @@ module.exports = React.createClass({
     transactionActions.getTransactions();
   },
 
-  onTransactionAction: function(response) {
+  onTransactionAction: function(transactions, sortedBy, order) {
     this.setState({
-      transactions: response
+      transactions: transactions,
+      sortedBy: sortedBy,
+      order: order
     });
-  },
-
-  sortHandler: function(sortBy) {
-    transactionActions.sortTransactions(sortBy);
   },
 
   render: function() {
     return (
       <div className='c-app'>
-        <table>
-          <tr>
-            <th onClick={this.sortHandler.bind(this, 'date')}>Date</th>
-            <th onClick={this.sortHandler.bind(this, 'company')}>Company</th>
-            <th onClick={this.sortHandler.bind(this, 'ledger')}>Ledger</th>
-            <th onClick={this.sortHandler.bind(this, 'amount')}>Amount</th>
-            <th>Balance</th>
+        <h1 className='c-app__header'>Bench Test</h1>
+        <table className='t-transaction-table'>
+          <tr className='t-transaction-table__row'>
+            <TableHeader
+              order={this.state.order}
+              sortedBy={this.state.sortedBy}
+              type='date'
+            />
+            <TableHeader
+              order={this.state.order}
+              sortedBy={this.state.sortedBy}
+              type='company'
+            />
+            <TableHeader
+              order={this.state.order}
+              sortedBy={this.state.sortedBy}
+              type='ledger'
+            />
+            <TableHeader
+              order={this.state.order}
+              sortedBy={this.state.sortedBy}
+              type='amount'
+            />
+            <th>balance</th>
           </tr>
           {this.state.transactions.map(function onMap(transaction, index) {
             return (
               <Transaction
-                key={index + '#' + transaction.balance}
+                key={index + transaction.date}
                 transaction={transaction}
               />
             );
