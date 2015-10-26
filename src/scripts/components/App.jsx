@@ -39,37 +39,41 @@ module.exports = React.createClass({
       <div className='c-app'>
         <h1 className='c-app__header'>Bench Test</h1>
         <table className='t-transaction-table'>
-          <tr className='t-transaction-table__row'>
-            <TableHeader
-              order={this.state.order}
-              sortedBy={this.state.sortedBy}
-              type='date'
-            />
-            <TableHeader
-              order={this.state.order}
-              sortedBy={this.state.sortedBy}
-              type='company'
-            />
-            <TableHeader
-              order={this.state.order}
-              sortedBy={this.state.sortedBy}
-              type='ledger'
-            />
-            <TableHeader
-              order={this.state.order}
-              sortedBy={this.state.sortedBy}
-              type='amount'
-            />
-            <th>balance</th>
-          </tr>
-          {this.state.transactions.map(function onMap(transaction, index) {
-            return (
-              <Transaction
-                key={index + transaction.date}
-                transaction={transaction}
+          <thead className='t-transaction-table__head'>
+            <tr className='t-transaction-table__row'>
+              <TableHeader
+                order={this.state.order}
+                sortedBy={this.state.sortedBy}
+                type='date'
               />
-            );
-          })}
+              <TableHeader
+                order={this.state.order}
+                sortedBy={this.state.sortedBy}
+                type='company'
+              />
+              <TableHeader
+                order={this.state.order}
+                sortedBy={this.state.sortedBy}
+                type='ledger'
+              />
+              <TableHeader
+                order={this.state.order}
+                sortedBy={this.state.sortedBy}
+                type='amount'
+              />
+              <th className='t-transaction-table__balance'>balance</th>
+            </tr>
+          </thead>
+          <tbody className='t-transaction-table__body'>
+            {this.state.transactions.map(function onMap(transaction, index) {
+              return (
+                <Transaction
+                  key={index + transaction.balance}
+                  transaction={transaction}
+                />
+              );
+            })}
+          </tbody>
         </table>
       </div>
     );
