@@ -39,7 +39,7 @@
     "reflux": "^0.2.8"
   },
   "scripts": {
-    "gulp": "gulp",
+    "start": "gulp",
     "gulp:prod": "gulp build:prod"
   }
 }
