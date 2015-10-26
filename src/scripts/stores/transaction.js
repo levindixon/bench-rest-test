@@ -63,8 +63,6 @@ let Store = Reflux.createStore({
   },
 
   mapBalance: function(transactions, balance) {
-    balance = balance + transactions[0].amount;
-
     return _.map(transactions, function(transaction) {
       balance = balance - transaction.amount;
       transaction.balance = Math.round(balance * 1e2) / 1e2;
