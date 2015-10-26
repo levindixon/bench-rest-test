@@ -21,9 +21,18 @@ let Store = Reflux.createStore({
     this.fetchFirstPage();
   },
 
+  onSortTransactions: function(sortBy, direction) {
+    this.trigger(
+      this.sort(this.transactions, sortBy, direction)
+    );
+  },
+
   populateTransactions: function(newTransactions) {
     newTransactions = this.cleanTransactionsData(newTransactions);
     this.transactions = this.transactions.concat(newTransactions);
+    this.transactions = this.sort(this.transactions, 'date');
+    this.balance = this.calculateBalance(this.transactions);
+    this.transactions = this.mapBalance(this.transactions, this.balance);
     this.trigger(this.transactions);
   },
 
@@ -49,11 +58,33 @@ let Store = Reflux.createStore({
     });
   },
 
+  calculateBalance: function(transactions) {
+    return Math.round(_.sum(transactions, 'amount') * 1e2) / 1e2;
+  },
+
+  mapBalance: function(transactions, balance) {
+    balance = balance + transactions[0].amount;
+
+    return _.map(transactions, function(transaction) {
+      balance = balance - transaction.amount;
+      transaction.balance = Math.round(balance * 1e2) / 1e2;
+      return transaction;
+    });
+  },
+
   getPageCount: function(data) {
     let pageCount = Math.ceil(data.totalCount / data.transactions.length);
     this.pageCount = pageCount;
 
     return pageCount;
+  },
+
+  sort: function(transactions, sortBy, direction) {
+    if (!direction) {
+      direction = 'desc';
+    }
+
+    return _.sortByOrder(transactions, sortBy, direction);
   },
 
   fetchFirstPage: function() {
