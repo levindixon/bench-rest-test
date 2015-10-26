@@ -2,27 +2,90 @@
 // Dependencies
 const Reflux = require('reflux');
 const fetch = require('isomorphic-fetch');
+const _ = require('lodash');
 // Actions
 const actions = require('actions/transaction');
 
 let Store = Reflux.createStore({
   listenables: actions,
+  transactions: [],
+  balance: 0,
+  pageCount: 0,
 
-  onFetchTransactions: function(page) {
-    if (!page) {
-      page = 1;
+  onGetTransactions: function() {
+    if (this.transactions.length > 0) {
+      this.trigger(this.transactions);
+      return;
     }
 
-    fetch('http://resttest.bench.co/transactions/' + page + '.json')
+    this.fetchFirstPage();
+  },
+
+  populateTransactions: function(newTransactions) {
+    newTransactions = this.cleanTransactionsData(newTransactions);
+    this.transactions = this.transactions.concat(newTransactions);
+    this.trigger(this.transactions);
+  },
+
+  cleanTransactionsData: function(transactions) {
+    if (!transactions) {
+      return;
+    }
+
+    return _.map(transactions, function(transaction) {
+      let cleanTransaction = {};
+      let transactionDate = transaction.Date.split('-');
+
+      cleanTransaction.date = new Date(
+        transactionDate[0],
+        transactionDate[1] - 1,
+        transactionDate[2]
+      );
+      cleanTransaction.amount = parseFloat(transaction.Amount);
+      cleanTransaction.company = transaction.Company;
+      cleanTransaction.ledger = transaction.Ledger;
+
+      return cleanTransaction;
+    });
+  },
+
+  getPageCount: function(data) {
+    let pageCount = Math.ceil(data.totalCount / data.transactions.length);
+    this.pageCount = pageCount;
+
+    return pageCount;
+  },
+
+  fetchFirstPage: function() {
+    this.fetchPage(1)
+    .then(function(response) {
+      this.populateTransactions(response.transactions);
+      this.getPageCount(response);
+      this.fetchAllTransactions(this.pageCount);
+    }.bind(this));
+  },
+
+  fetchPage: function(page) {
+    return fetch('http://resttest.bench.co/transactions/' + page + '.json')
       .then(function(response) {
         if (response.status >= 400) {
           throw new Error('Bad response from server');
         }
         return response.json();
-      })
+      });
+  },
+
+  fetchAllTransactions: function(pageCount) {
+    if (!pageCount) {
+      return;
+    }
+
+    for (let i = pageCount; i > 1; i--) {
+      this.fetchPage(i)
       .then(function(data) {
-        this.trigger(data);
+        this.populateTransactions(data.transactions);
       }.bind(this));
+    }
   }
 });
 
