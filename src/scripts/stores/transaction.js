@@ -31,6 +31,8 @@ let Store = Reflux.createStore({
     newTransactions = this.cleanTransactionsData(newTransactions);
     this.transactions = this.transactions.concat(newTransactions);
     this.transactions = this.sort(this.transactions, 'date');
+    this.balance = this.calculateBalance(this.transactions);
+    this.transactions = this.mapBalance(this.transactions, this.balance);
     this.trigger(this.transactions);
   },
 
@@ -53,6 +55,20 @@ let Store = Reflux.createStore({
       cleanTransaction.ledger = transaction.Ledger;
 
       return cleanTransaction;
+    });
+  },
+
+  calculateBalance: function(transactions) {
+    return Math.round(_.sum(transactions, 'amount') * 1e2) / 1e2;
+  },
+
+  mapBalance: function(transactions, balance) {
+    balance = balance + transactions[0].amount;
+
+    return _.map(transactions, function(transaction) {
+      balance = balance - transaction.amount;
+      transaction.balance = Math.round(balance * 1e2) / 1e2;
+      return transaction;
     });
   },
 
